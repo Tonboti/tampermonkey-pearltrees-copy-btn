@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         New Userscript
+// @name         Pearltrees Copy text button
 // @namespace    http://tampermonkey.net/
 // @version      2024-11-14
 // @description  try to take over the world!
@@ -33,6 +33,8 @@
     'use strict';
     let flag = true ;
     let output = "";
+    var previousButtonContainer = null;
+    var changePageCounter = 1;
 
     function checkParagraphCount() {
         const containerLoaded = document.querySelector('.scrap-selection-container');
@@ -43,38 +45,39 @@
             const pElements = container.querySelectorAll('p');
 
             if(pElements.length != 0){
-                console.log("paragraphes charges")
+                // console.log("paragraphes charges")
                 pElements.forEach(p => {
-                    console.log(p.textContent);
+                    // console.log(p);
                     output+=p.textContent;
                 });
 
-                const buttonContainerClass = document.getElementsByClassName('node-action-bar');
+                var buttonContainerClass = document.getElementsByClassName('node-action-bar');
 
                 // for(let i=0;i<buttonContainerClass.length; i++){
-                //     buttonContainerClass[1].style.background = "rgb(0,0,0)";
+                    // console.log(i);
                 // }
-                let buttonContainer = buttonContainerClass[1];
+                let buttonContainer = buttonContainerClass[buttonContainerClass.length-1];
 
-                buttonContainer.style.display = "inline-flex";
-                buttonContainer.style.width = "auto";
-                buttonContainer.style.alignItems = "flex-start";
-                // buttonContainer.style.flexWrap = "nowrap";
+                if (previousButtonContainer!=buttonContainer){
+                    buttonContainer.style.display = "inline-flex";
+                    buttonContainer.style.width = "auto";
+                    buttonContainer.style.alignItems = "flex-start";
 
-                let btn = document.createElement("button");
-                btn.innerHTML = "&#x2398;";
-                btn.className = "copyBtn nodeaction";
-                btn.onclick = () => {
-                    // output.select();
-                    // output.setSelectionRange(0, 99999); // For mobile devices
-
-                    // Copy the text inside the text field
-                    navigator.clipboard.writeText(output);
-                    output = ""
+                    let btn = document.createElement("button");
+                    btn.innerHTML = "&#x2398;";
+                    btn.className = "copyBtn nodeaction";
+                    btn.onclick = () => {
+                        // output.select();
+                        // output.setSelectionRange(0, 99999); // For mobile devices
+                        navigator.clipboard.writeText(output);
+                        output = "";
+                    }
+                    buttonContainer.appendChild(btn);
                 }
-                buttonContainer.appendChild(btn);
-
                 flag = false;
+                previousButtonContainer = buttonContainer;
+                changePageCounter+=1;
+
             }
         }
     }
@@ -88,10 +91,15 @@
     function checkUrl() {
         var path = window.location.pathname;
         var page = path.split("/").pop();
-        console.log("Page actuelle :", page);
+        var previousPage = "";
 
-        if(page.startsWith('item')) {
+        // console.log("Page actuelle :", page);
+        output = "";
+
+        if(page.startsWith('item') && page!= previousPage) {
             flag = true;
+            previousPage = page;
+            // console.log("YAY")
         }
     }
 
