@@ -45,17 +45,11 @@
             const pElements = container.querySelectorAll('p');
 
             if(pElements.length != 0){
-                // console.log("paragraphes charges")
                 pElements.forEach(p => {
-                    // console.log(p);
                     output+=p.textContent;
                 });
 
                 var buttonContainerClass = document.getElementsByClassName('node-action-bar');
-
-                // for(let i=0;i<buttonContainerClass.length; i++){
-                    // console.log(i);
-                // }
                 let buttonContainer = buttonContainerClass[buttonContainerClass.length-1];
 
                 if (previousButtonContainer!=buttonContainer){
@@ -67,8 +61,6 @@
                     btn.innerHTML = "&#x2398;";
                     btn.className = "copyBtn nodeaction";
                     btn.onclick = () => {
-                        // output.select();
-                        // output.setSelectionRange(0, 99999); // For mobile devices
                         navigator.clipboard.writeText(output);
                         output = "";
                     }
@@ -91,14 +83,11 @@
         var path = window.location.pathname;
         var page = path.split("/").pop();
         var previousPage = "";
-
-        // console.log("Page actuelle :", page);
         output = "";
 
         if(page.startsWith('item') && page!= previousPage) {
             flag = true;
             previousPage = page;
-            // console.log("YAY")
         }
     }
 
@@ -108,11 +97,11 @@
     const replaceState = history.replaceState;
     history.pushState = function() {
         pushState.apply(history, arguments);
-        checkUrl(); // Appelle checkUrl après pushState
+        checkUrl();
     };
     history.replaceState = function() {
         replaceState.apply(history, arguments);
-        checkUrl(); // Appelle checkUrl après replaceState
+        checkUrl();
     };
 
 })();
