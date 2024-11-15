@@ -87,7 +87,6 @@
     observer2.observe(document.body, { childList: true, subtree: true });
     checkParagraphCount();
 
-    // Fonction pour vérifier et afficher le chemin actuel
     function checkUrl() {
         var path = window.location.pathname;
         var page = path.split("/").pop();
