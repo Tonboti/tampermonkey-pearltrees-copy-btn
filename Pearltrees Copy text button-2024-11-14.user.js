@@ -90,15 +90,6 @@
             JSP += 1;
 
             // console.log("OUTPUT\\\\\\\\\\\\      " +output + "    \\\\\\\\\\\\OUTPUT")
-            // output = "";
-            // previousButtonContainer = buttonContainer;
-            // console.log(pElements);
-
-            // console.log(pElementsId)
-            // previousPElementsId = pElementsId;
-            // console.log('FLAG = FALSE')
-
-            // console.log ( " JPS + = 1" )
         }
     }
 
