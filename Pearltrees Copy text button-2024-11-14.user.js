@@ -9,8 +9,9 @@
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // ==/UserScript==
-
 (function() {
+    'use strict';
+
     let styleSheet = `
 .copyBtn {
     padding:0;
@@ -24,53 +25,81 @@
     height:20px;
 }
 `;
-
     let s = document.createElement('style');
     s.type = "text/css";
     s.innerHTML = styleSheet;
     (document.head || document.documentElement).appendChild(s);
 
-    'use strict';
-    let flag = true ;
-    let output = "";
+    var flag = false ;
+    var output = " ";
+    var previousOutput = null;
+
     var previousButtonContainer = null;
-    var changePageCounter = 1;
+    var previousContainer = null;
+    var pElements = null;
+    var previousPElements = null;
+    var previousPElementsId = null;
+    var vraiContainer="";
+    let JSP = 1;
+    let QUOICOUBEH = 0;
+    var previousVraiContainerId = "";
+
 
     function checkParagraphCount() {
-        const containerLoaded = document.querySelector('.scrap-selection-container');
-        if (containerLoaded!= null && flag == true ) {
-            // console.log(`Le conteneur principal est charge`);
-            // observer2.disconnect();
-            const container = document.querySelector('.scrap-selection-container');
-            const pElements = container.querySelectorAll('p');
+        const container = document.getElementsByClassName('scrap-selection-container');
+        // console.log("container.length : " + container.length + " || flag : "+flag + "|| JSP : " + JSP)
 
-            if(pElements.length != 0){
-                pElements.forEach(p => {
-                    output+=p.textContent;
-                });
+        if(container.length!==0 && flag === true ){
 
-                var buttonContainerClass = document.getElementsByClassName('node-action-bar');
-                let buttonContainer = buttonContainerClass[buttonContainerClass.length-1];
-
-                if (previousButtonContainer!=buttonContainer){
-                    buttonContainer.style.display = "inline-flex";
-                    buttonContainer.style.width = "auto";
-                    buttonContainer.style.alignItems = "flex-start";
-
-                    let btn = document.createElement("button");
-                    btn.innerHTML = "&#x2398;";
-                    btn.className = "copyBtn nodeaction";
-                    btn.onclick = () => {
-                        navigator.clipboard.writeText(output);
-                        output = "";
-                    }
-                    buttonContainer.appendChild(btn);
+            for(let i=0; i<container.length;i++) {
+                  vraiContainer = container[i];
+              //  console.log("vraiContainer.id = " + vraiContainer.id + "// previousVraiContainerId = "+ previousVraiContainerId )
+                if (vraiContainer.id != previousVraiContainerId ){
+                    // console.log("ALORSPEUTETRE")
+                    break
                 }
-                flag = false;
-                previousButtonContainer = buttonContainer;
-                changePageCounter+=1;
-
             }
+
+            pElements = vraiContainer.querySelectorAll('p');
+            if (pElements.length == 0) return // console.log("ABORT THE MISSION" + vraiContainer.id)
+
+            vraiContainer.style.borderRadius = "15px";
+            vraiContainer.style.transition = ".7s"
+            vraiContainer.title = "click to copy"
+            vraiContainer.onclick = function() {
+                navigator.clipboard.writeText(output);
+                alert('Text Copied Successfully!')
+            }
+            vraiContainer.onmouseover = function() {vraiContainer.style.background = "rgb(240, 240, 240)"}
+            vraiContainer.onmouseout = function() {vraiContainer.style.background = "rgb(255,255,255)"}
+
+            // console.log("1er if passe")
+            vraiContainer.id = JSP;
+            previousVraiContainerId = JSP;
+
+            if (output != " ") previousOutput = output
+            output = "";
+
+            for(let i=0; i<pElements.length;i++) {
+                let outputToAdd = pElements[i].textContent
+                output+= outputToAdd + '\n\n' ;
+            }
+
+            pElements = null;
+            flag = false;
+            previousContainer=container;
+            JSP += 1;
+
+            // console.log("OUTPUT\\\\\\\\\\\\      " +output + "    \\\\\\\\\\\\OUTPUT")
+            // output = "";
+            // previousButtonContainer = buttonContainer;
+            // console.log(pElements);
+
+            // console.log(pElementsId)
+            // previousPElementsId = pElementsId;
+            // console.log('FLAG = FALSE')
+
+            // console.log ( " JPS + = 1" )
         }
     }
 
@@ -82,12 +111,11 @@
     function checkUrl() {
         var path = window.location.pathname;
         var page = path.split("/").pop();
-        var previousPage = "";
-        output = "";
-
-        if(page.startsWith('item') && page!= previousPage) {
+        var precedentPath = "";
+        if(page.startsWith('item') && precedentPath!=path) {
             flag = true;
-            previousPage = page;
+            // console.log('FLAG = TRUE')
+            precedentPath=path;
         }
     }
 
@@ -103,5 +131,7 @@
         replaceState.apply(history, arguments);
         checkUrl();
     };
+
+
 
 })();
