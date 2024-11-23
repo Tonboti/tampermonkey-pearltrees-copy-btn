@@ -41,7 +41,6 @@
     var previousPElementsId = null;
     var vraiContainer="";
     let JSP = 1;
-    let QUOICOUBEH = 0;
     var previousVraiContainerId = "";
 
 
